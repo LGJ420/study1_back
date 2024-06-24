@@ -1,5 +1,7 @@
 package org.zerock.mallapi.service;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,4 +33,15 @@ public class TodoServiceImpl implements TodoService{
        return savedTodo.getTno();
     }
     
+    @Override
+    public TodoDTO get(Long tno) {
+        
+        Optional<Todo> result = todoRepository.findById(tno);
+
+        Todo todo = result.orElseThrow();
+
+        TodoDTO dto = modelMapper.map(todo, TodoDTO.class);
+
+        return dto;
+    }
 }

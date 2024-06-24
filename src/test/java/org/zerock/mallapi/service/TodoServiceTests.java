@@ -29,5 +29,15 @@ public class TodoServiceTests {
 
         log.info("TNO: " + tno);
     }
+
+    @Test
+    public void testGet() {
+
+        Long tno = 101L;
+
+        TodoDTO todoDTO = todoService.get(tno);
+
+        log.info(todoDTO);
+    }
     
 }
