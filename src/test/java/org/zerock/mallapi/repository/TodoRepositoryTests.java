@@ -1,6 +1,7 @@
 package org.zerock.mallapi.repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,20 @@ public class TodoRepositoryTests {
         Todo todo = result.orElseThrow();
 
         log.info(todo);
+    }
+
+    @Test
+    public void testModify() {
+
+        Long tno = 33L;
+
+        Optional<Todo> result = todoRepository.findById(tno);
+
+        Todo todo = result.orElseThrow();
+        todo.changeTitle("Modified 33...");
+        todo.changeComplete(true);
+        todo.changeDueDate(LocalDate.of(2023, 10, 10));
+
+        todoRepository.save(todo);
     }
 }
