@@ -29,4 +29,16 @@ public class TodoRepositoryTests {
             todoRepository.save(todo);
         }
     }
+
+    @Test
+    public void testRead() {
+
+        Long tno = 33L;
+
+        java.util.Optional<Todo> result = todoRepository.findById(tno);
+
+        Todo todo = result.orElseThrow();
+
+        log.info(todo);
+    }
 }
