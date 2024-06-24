@@ -69,4 +69,15 @@ public class TodoRepositoryTests {
         todoRepository.deleteById(tno);
     }
 
+    @Test
+    public void testPaging() {
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("tno").descending());
+
+        Page<Todo> result = todoRepository.findAll(pageable);
+
+        log.info(result.getTotalElements());
+
+        result.getContent().stream().forEach(todo->log.info(todo));
+    }
 }
