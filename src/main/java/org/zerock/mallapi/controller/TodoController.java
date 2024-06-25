@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +62,16 @@ public class TodoController {
         log.info("Modify: " + todoDTO);
 
         service.modify(todoDTO);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    @DeleteMapping("/{tno}")
+    public Map<String, String> remove(@PathVariable(name = "tno") Long tno) {
+
+        log.info("Remove: " + tno);
+
+        service.remove(tno);
 
         return Map.of("RESULT", "SUCCESS");
     }
