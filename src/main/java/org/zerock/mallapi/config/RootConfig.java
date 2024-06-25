@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RootConfig {
-    
+
+    /*
+     * ModelMapper는 DTO <-> 엔티티 처리를 수월하게 해주는 라이브러리이다
+     */
     @Bean
     public ModelMapper getMapper() {
         ModelMapper modelMapper = new ModelMapper();
