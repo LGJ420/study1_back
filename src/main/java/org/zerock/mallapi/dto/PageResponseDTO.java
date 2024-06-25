@@ -16,7 +16,7 @@ public class PageResponseDTO<E> {
     private boolean prev, next;
     private int totalCount, prevPage, nextPage, totalPage, current;
 
-    @Builder(buildMethodName = "withAll")
+    @Builder(builderMethodName = "withAll")
     public PageResponseDTO(List<E> dtoList, PageRequestDTO pageRequestDTO, long totalCount) {
 
         this.dtoList = dtoList;
