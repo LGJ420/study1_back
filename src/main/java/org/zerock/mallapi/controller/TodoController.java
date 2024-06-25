@@ -15,6 +15,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -48,5 +49,19 @@ public class TodoController {
         long tno = service.register(todoDTO);
 
         return Map.of("TNO", tno);
+    }
+
+    @PutMapping("/{tno}")
+    public Map<String, String> modify(
+        @PathVariable(name = "tno") Long tno,
+        @RequestBody TodoDTO todoDTO) {
+
+        todoDTO.setTno(tno);
+
+        log.info("Modify: " + todoDTO);
+
+        service.modify(todoDTO);
+
+        return Map.of("RESULT", "SUCCESS");
     }
 }
