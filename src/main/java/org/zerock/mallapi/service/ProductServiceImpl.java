@@ -65,4 +65,37 @@ public class ProductServiceImpl implements ProductService {
             .pageRequestDTO(pageRequestDTO)
             .build();
     }
+
+    @Override
+    public Long register(ProductDTO productDTO) {
+
+        Product product = dtoToEntity(productDTO);
+
+        Product result = productRepository.save(product);
+
+        return result.getPno();
+    }
+
+    private Product dtoToEntity(ProductDTO productDTO){
+
+        Product product = Product.builder()
+            .pno(productDTO.getPno())
+            .pname(productDTO.getPname())
+            .pdesc(productDTO.getPdesc())
+            .price(productDTO.getPrice())
+            .build();
+
+        List<String> uploadFileNames = productDTO.getUploadFileNames();
+
+        if (uploadFileNames == null) {
+            return product;
+        }
+
+        uploadFileNames.stream().forEach(uploadName->{
+
+            product.addImageString(uploadName);
+        });
+
+        return product;
+    }
 }
