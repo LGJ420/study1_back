@@ -1,10 +1,12 @@
 package org.zerock.mallapi.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.mallapi.domain.Product;
 
 import lombok.extern.log4j.Log4j2;
@@ -35,4 +37,37 @@ public class ProductRepositoryTests {
             log.info("--------------------");
         }
     }
+
+    @Transactional
+    @Test
+    public void testRead(){
+
+        Long pno = 1L;
+
+        Optional<Product> result = productRepository.findById(pno);
+
+        Product product = result.orElseThrow();
+
+        log.info(product);
+        log.info(product.getImageList());
+    }
+
+    /*
+     * testRead()의 2버전
+     * selectOne함수를 만들어놓고 @EntityGraph붙이면
+     * 조인된 쿼리가 생성되기 때문에 트랜잭션이 필요없어짐
+     */
+    @Test
+    public void testRead2(){
+
+        Long pno = 1L;
+
+        Optional<Product> result = productRepository.selectOne(pno);
+
+        Product product = result.orElseThrow();
+
+        log.info(product);
+        log.info(product.getImageList());
+    }
+
 }
