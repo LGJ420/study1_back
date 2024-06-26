@@ -1,6 +1,7 @@
 package org.zerock.mallapi.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -97,5 +98,41 @@ public class ProductServiceImpl implements ProductService {
         });
 
         return product;
+    }
+
+    @Override
+    public ProductDTO get(Long pno){
+
+        Optional<Product> result = productRepository.selectOne(pno);
+
+        Product product = result.orElseThrow();
+
+        ProductDTO productDTO = entityToDTO(product);
+
+        return productDTO;
+    }
+
+    private ProductDTO entityToDTO(Product product){
+
+        ProductDTO productDTO = ProductDTO.builder()
+            .pno(product.getPno())
+            .pname(product.getPname())
+            .pdesc(product.getPdesc())
+            .price(product.getPrice())
+            .build();
+
+        List<ProductImage> imageList = product.getImageList();
+
+        if(imageList == null || imageList.size() == 0){
+            return productDTO;
+        }
+
+        List<String> fileNameList = imageList.stream()
+            .map(productImage->productImage.getFileName())
+            .toList();
+
+        productDTO.setUploadFileNames(fileNameList);
+
+        return productDTO;
     }
 }

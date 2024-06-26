@@ -63,4 +63,10 @@ public class ProductController {
         
         return fileUtil.getFile(fileName);
     }
+
+    @GetMapping("/{pno}")
+    public ProductDTO read(@PathVariable(name="pno") Long pno){
+
+        return productService.get(pno);
+    }
 }
