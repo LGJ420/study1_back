@@ -30,7 +30,7 @@ public class CustomSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         log.info("--------------------security config--------------------");
-
+                                            
         http.cors(httpSecurityCorsConfigurer -> {
             httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
         });
@@ -39,6 +39,10 @@ public class CustomSecurityConfig {
             sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.csrf(config -> config.disable());
+
+        http.formLogin(config->{
+            config.loginPage("/api/member/login");
+        });
 
         return http.build();
     }

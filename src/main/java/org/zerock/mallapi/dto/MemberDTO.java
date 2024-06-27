@@ -16,6 +16,7 @@ import lombok.ToString;
 /*
  * MemberDTO는 기존 DTO와 달리
  * 스프링 시큐리티에서 이용하는 User타입의 객체를 상속받는다
+ * (빌더도 올아규/노아규 컨스트럭터도 없다!)
  */
 @Getter
 @Setter
