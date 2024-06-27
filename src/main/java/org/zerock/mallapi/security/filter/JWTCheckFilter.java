@@ -1,8 +1,13 @@
 package org.zerock.mallapi.security.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.zerock.mallapi.util.JWTUtil;
+
+import com.google.gson.Gson;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,9 +21,24 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
+        // Prefilght요청은 로그인 체크하지 않음
+        if(request.getMethod().equals("OPTIONS")){
+            return true;
+        }
+
         String path = request.getRequestURI();
 
         log.info("check uri.............." + path);
+
+        //api/member/ 경로의 호출은 로그인 체크하지 않음
+        if(path.startsWith("/api/member/")){
+            return true;
+        }
+
+        //api/products/view/ 경로의 호출은 로그인 체크하지 않음
+        if(path.startsWith("/api/products/view/")){
+            return true;
+        }
 
         return false;
     }
@@ -28,12 +48,32 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("-----------------------------");
+        log.info("---------------JWTCheckFilter---------------");
         
-        log.info("-----------------------------");
+        String authHeaderStr = request.getHeader("Authorization");
 
-        log.info("-----------------------------");
+        try {
+            String accessToken = authHeaderStr.substring(7);
+            Map<String, Object> claims = JWTUtil.validateToken(accessToken);
 
-        filterChain.doFilter(request, response);
+            log.info("JWT claims: " + claims);
+
+            filterChain.doFilter(request, response);
+        }
+        catch(Exception e){
+
+            log.error("JWT Check Error.............");
+            log.error(e.getMessage());
+
+            Gson gson = new Gson();
+            String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
+
+            response.setContentType("application/json");
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(msg);
+            printWriter.close();
+        }
+
     }
+    
 }
