@@ -1,0 +1,14 @@
+package org.zerock.mallapi.repository;
+
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
+import org.zerock.mallapi.domain.Member;
+
+public interface MemberRepository extends JpaRepository<Member, String> {
+
+    //@EntityGraph는 해당 속성(memberRoleList)를 조인해서 가져오도록 해줌
+    @EntityGraph(attributePaths = {"memberRoleList"})
+    @Query("select m from Member m where m.email = :email")
+    Member getWithRoles(@Param("email") String email);
+    
+}
