@@ -12,6 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.zerock.mallapi.security.handler.APILoginFailHandler;
+import org.zerock.mallapi.security.handler.APILoginSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -42,6 +44,8 @@ public class CustomSecurityConfig {
 
         http.formLogin(config->{
             config.loginPage("/api/member/login");
+            config.successHandler(new APILoginSuccessHandler());
+            config.failureHandler(new APILoginFailHandler());
         });
 
         return http.build();
