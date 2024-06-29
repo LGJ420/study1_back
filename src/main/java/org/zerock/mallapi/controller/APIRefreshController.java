@@ -23,7 +23,7 @@ public class APIRefreshController {
         String refreshToken){
 
         if(refreshToken == null){
-            throw new CustomJWTException("NULL_REFRESH")
+            throw new CustomJWTException("NULL_REFRESH");
         }
 
         if(authHeader == null || authHeader.length() < 7) {
@@ -42,7 +42,7 @@ public class APIRefreshController {
 
         log.info("refresh ... claims: " + claims);
 
-        String newAccessToken = JWTUtil.generateToken(claims, 10)
+        String newAccessToken = JWTUtil.generateToken(claims, 10);
 
         String newRefreshToken = checkTime((Integer)claims.get("exp")) == true ?
             JWTUtil.generateToken(claims, 60*24) : refreshToken;
