@@ -5,11 +5,14 @@ import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.mallapi.domain.Member;
 import org.zerock.mallapi.dto.MemberDTO;
+import org.zerock.mallapi.dto.MemberModifyDTO;
 
 @Transactional
 public interface MemberService {
     
     MemberDTO getKakaoMember(String accessToken);
+
+    void modifyMember(MemberModifyDTO memberModifyDTO);
 
     default MemberDTO entityToDTO(Member member){
 

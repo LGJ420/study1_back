@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.zerock.mallapi.domain.Member;
 import org.zerock.mallapi.domain.MemberRole;
 import org.zerock.mallapi.dto.MemberDTO;
+import org.zerock.mallapi.dto.MemberModifyDTO;
 import org.zerock.mallapi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,22 @@ public class MemberServiceImpl implements MemberService{
         return memberDTO;
     }
 
+
+    @Override
+    public void modifyMember(MemberModifyDTO memberModifyDTO){
+
+        Optional<Member> result = memberRepository.findById(memberModifyDTO.getEmail());
+
+        Member member = result.orElseThrow();
+
+        member.changePw(passwordEncoder.encode(memberModifyDTO.getPw()));
+        member.changeSocial(false);
+        member.changeNickname(memberModifyDTO.getNickname());
+
+        memberRepository.save(member);
+    }
+
+
     private String getEmailFromKakaoAccessToken(String accessToken){
 
         String kakaoGetUserURL = "https://kapi.kakao.com/v2/user/me";
@@ -91,6 +108,7 @@ public class MemberServiceImpl implements MemberService{
         return kakaoAccount.get("email");
     }
 
+
     private String makeTempPassword() {
 
         StringBuffer buffer = new StringBuffer();
@@ -101,6 +119,7 @@ public class MemberServiceImpl implements MemberService{
 
         return buffer.toString();
     }
+
 
     private Member makeSocialMember(String email){
 
