@@ -96,6 +96,10 @@ public class CartServiceImpl implements CartService{
     }
 
 
+    /*
+     * 카트서비스의 remove는 특이하게 리턴값이 있다!
+     * 아이템을 제거하고 다시 카트목록을 보여줘야 하기 때문
+     */
     @Override
     public List<CartItemListDTO> remove(Long cino) {
 
