@@ -1,15 +1,19 @@
 package org.zerock.mallapi.service;
 
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.zerock.mallapi.domain.Member;
+import org.zerock.mallapi.domain.MemberRole;
 import org.zerock.mallapi.dto.MemberDTO;
 import org.zerock.mallapi.repository.MemberRepository;
 
@@ -22,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 public class MemberServiceImpl implements MemberService{
     
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public MemberDTO getKakaoMember(String accessToken){
@@ -30,7 +35,23 @@ public class MemberServiceImpl implements MemberService{
 
         log.info("email: " + email);
 
-        return null;
+        Optional<Member> result = memberRepository.findById(email);
+
+        //기존 회원이라면
+        if(result.isPresent()){
+
+            MemberDTO memberDTO = entityToDTO(result.get());
+
+            return memberDTO;
+        }
+
+        //기존 회원이 아니라면
+        Member socialMember = makeSocialMember(email);
+        memberRepository.save(socialMember);
+
+        MemberDTO memberDTO = entityToDTO(socialMember);
+
+        return memberDTO;
     }
 
     private String getEmailFromKakaoAccessToken(String accessToken){
@@ -68,5 +89,36 @@ public class MemberServiceImpl implements MemberService{
         log.info("kakaoAccount: " + kakaoAccount);
 
         return kakaoAccount.get("email");
+    }
+
+    private String makeTempPassword() {
+
+        StringBuffer buffer = new StringBuffer();
+
+        for(int i = 0; i < 10; i++){
+            buffer.append((char)((int)(Math.random()*55) + 65 ));
+        }
+
+        return buffer.toString();
+    }
+
+    private Member makeSocialMember(String email){
+
+        String tempPassword = makeTempPassword();
+
+        log.info("tempPassword: " + tempPassword);
+
+        String nickname = "소셜회원";
+
+        Member member = Member.builder()
+            .email(email)
+            .pw(passwordEncoder.encode(tempPassword))
+            .nickname(nickname)
+            .social(true)
+            .build();
+
+        member.addRole(MemberRole.USER);
+
+        return member;
     }
 }
