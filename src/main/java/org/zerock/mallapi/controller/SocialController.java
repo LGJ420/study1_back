@@ -3,7 +3,7 @@ package org.zerock.mallapi.controller;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.mallapi.dto.MemberDTO;
@@ -41,7 +41,7 @@ public class SocialController {
     }
 
 
-    @PostMapping("/api/member/modify")
+    @PutMapping("/api/member/modify")
     public Map<String, String> modify(@RequestBody MemberModifyDTO memberModifyDTO){
 
         log.info("member modify: " + memberModifyDTO);
