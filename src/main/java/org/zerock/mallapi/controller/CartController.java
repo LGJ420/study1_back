@@ -1,5 +1,6 @@
 package org.zerock.mallapi.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,5 +31,17 @@ public class CartController {
         }
 
         return cartService.addOrModify(itemDTO);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @GetMapping("/items")
+    public List<CartItemListDTO> getCartItems(Principal principal){
+
+        String email = principal.getName();
+        log.info("--------------------------------------------");
+        log.info("email: " + email);
+
+        return cartService.getCartItems(email);
     }
 }
